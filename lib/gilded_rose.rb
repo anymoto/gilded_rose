@@ -3,7 +3,15 @@ def update_quality(items)
     if item.name != 'Aged Brie' && item.name != 'Backstage passes to a TAFKAL80ETC concert'
       if item.quality > 0
         if item.name != 'Sulfuras, Hand of Ragnaros'
-          item.quality -= 1
+          if item.name != 'Conjured'
+            item.quality -= 1
+          else
+            if item.quality > 1
+              item.quality -= 2
+            else
+              item.quality = 0
+            end
+          end
         end
       end
     else

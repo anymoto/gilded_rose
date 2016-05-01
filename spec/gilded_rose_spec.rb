@@ -34,9 +34,9 @@ describe "#update_quality" do
     end
   end
 
-  context 'when the quality is almost zero and sell by date has passed' do
+  context 'when the quality is zero and sell by date has passed' do
     let(:initial_sell_in) { 0 }
-    let(:initial_quality) { 1 }
+    let(:initial_quality) { 0 }
     let(:name) { "item" }
     let(:item) { Item.new(name, initial_sell_in, initial_quality) }
 
@@ -115,15 +115,23 @@ describe "#update_quality" do
 
   ######### Conjured contexts
 
-  context 'with Conjured item' do
-    let(:item) { Item.new('Conjured', 5, 15) }
+  context 'with Conjured quality greater than 1' do
+    let(:item) { Item.new('Conjured', 5, 8) }
 
     it 'decreases sell-in date' do
       expect{ update_quality([item]) }.to change{ item.sell_in }.from(5).to(4)
     end
 
     it 'decreases quality by 2' do
-      expect{ update_quality([item]) }.to change{ item.quality }.from(15).to(13)
+      expect{ update_quality([item]) }.to change{ item.quality }.from(8).to(6)
+    end
+  end
+
+  context 'with Conjured quality equals to 1' do
+    let(:item) { Item.new('Conjured', 5, 1) }
+
+    it 'set quality as zero' do
+      expect{ update_quality([item]) }.to change{ item.quality }.from(1).to(0)
     end
   end
 
