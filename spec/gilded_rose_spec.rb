@@ -1,6 +1,6 @@
 require_relative '../lib/gilded_rose'
 
-describe "#update_quality" do
+describe GildedRose, "#update_quality" do
 
   ######### Regular item contexts
 
@@ -9,8 +9,9 @@ describe "#update_quality" do
     let(:initial_quality) { 10 }
     let(:name) { "item" }
     let(:item) { Item.new(name, initial_sell_in, initial_quality) }
+    let(:subject) { GildedRose.new([item]) }
 
-    before { update_quality([item]) }
+    before { subject.update_quality }
 
     it 'decreases sell in date' do
       expect(item.sell_in).to eq(4)
@@ -26,8 +27,9 @@ describe "#update_quality" do
     let(:initial_quality) { 10 }
     let(:name) { "item" }
     let(:item) { Item.new(name, initial_sell_in, initial_quality) }
+    let(:subject) { GildedRose.new([item]) }
 
-    before { update_quality([item]) }
+    before { subject.update_quality }
 
     it 'decreases quality twice as fast' do
       expect(item.quality).to eq(8)
@@ -39,8 +41,9 @@ describe "#update_quality" do
     let(:initial_quality) { 0 }
     let(:name) { "item" }
     let(:item) { Item.new(name, initial_sell_in, initial_quality) }
+    let(:subject) { GildedRose.new([item]) }
 
-    before { update_quality([item]) }
+    before { subject.update_quality }
 
     it 'does not set a negative number to quality' do
       expect(item.quality).to eq(0)
@@ -51,8 +54,9 @@ describe "#update_quality" do
 
   context 'with Aged Brie' do
     let(:item) { Item.new('Aged Brie', 3, 10) }
+    let(:subject) { GildedRose.new([item]) }
 
-    before { update_quality([item]) }
+    before { subject.update_quality }
 
     it 'decreases sell in date' do
       expect(item.sell_in).to eq(2)
@@ -65,8 +69,9 @@ describe "#update_quality" do
 
   context 'when Aged Brie quality is 50' do
     let(:item) { Item.new('Aged Brie', 3, 50) }
+    let(:subject) { GildedRose.new([item]) }
 
-    before { update_quality([item]) }
+    before { subject.update_quality }
 
     it 'does not increases quality' do
       expect(item.quality).to eq(50)
@@ -78,8 +83,9 @@ describe "#update_quality" do
 
   context 'with Sulfuras, Hand of Ragnaros' do
     let(:item) { Item.new('Sulfuras, Hand of Ragnaros', 0, 80) }
+    let(:subject) { GildedRose.new([item]) }
 
-    before { update_quality([item]) }
+    before { subject.update_quality }
 
     it 'does not change item values' do
       expect(item.sell_in).to eq(0)
@@ -91,25 +97,28 @@ describe "#update_quality" do
 
   context 'with Backstage Passes with more than 10 days left' do
     let(:item) { Item.new('Backstage passes to a TAFKAL80ETC concert', 11, 10) }
+    let(:subject) { GildedRose.new([item]) }
 
     it 'increases quality by 1' do
-      expect{ update_quality([item]) }.to change{ item.quality }.by(1)
+      expect{ subject.update_quality }.to change{ item.quality }.by(1)
     end
   end
 
   context 'with Backstage Passes with 10 days or less left' do
     let(:item) { Item.new('Backstage passes to a TAFKAL80ETC concert', 8, 10) }
+    let(:subject) { GildedRose.new([item]) }
 
     it 'increases quality by 2' do
-      expect{ update_quality([item]) }.to change{ item.quality }.by(2)
+      expect{ subject.update_quality }.to change{ item.quality }.by(2)
     end
   end
 
   context 'with Backstage Passes with 5 days or less left' do
     let(:item) { Item.new('Backstage passes to a TAFKAL80ETC concert', 5, 10) }
+    let(:subject) { GildedRose.new([item]) }
 
     it 'increases quality by 3' do
-      expect{ update_quality([item]) }.to change{ item.quality }.by(3)
+      expect{ subject.update_quality }.to change{ item.quality }.by(3)
     end
   end
 
@@ -117,21 +126,23 @@ describe "#update_quality" do
 
   context 'with Conjured quality greater than 1' do
     let(:item) { Item.new('Conjured', 5, 8) }
+    let(:subject) { GildedRose.new([item]) }
 
     it 'decreases sell-in date' do
-      expect{ update_quality([item]) }.to change{ item.sell_in }.from(5).to(4)
+      expect{ subject.update_quality }.to change{ item.sell_in }.from(5).to(4)
     end
 
     it 'decreases quality by 2' do
-      expect{ update_quality([item]) }.to change{ item.quality }.from(8).to(6)
+      expect{ subject.update_quality }.to change{ item.quality }.from(8).to(6)
     end
   end
 
   context 'with Conjured quality equals to 1' do
     let(:item) { Item.new('Conjured', 5, 1) }
+    let(:subject) { GildedRose.new([item]) }
 
     it 'set quality as zero' do
-      expect{ update_quality([item]) }.to change{ item.quality }.from(1).to(0)
+      expect{ subject.update_quality }.to change{ item.quality }.from(1).to(0)
     end
   end
 
@@ -144,8 +155,9 @@ describe "#update_quality" do
         Item.new("Aged Brie", 3, 10),
       ]
     }
+    let(:subject) { GildedRose.new(items) }
 
-    before { update_quality(items) }
+    before { subject.update_quality }
 
     it 'changes items quality' do
       expect(items.first.quality).to eq(9)
