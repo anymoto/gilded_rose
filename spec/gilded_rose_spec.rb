@@ -83,6 +83,10 @@ describe GildedRose, "#update_quality" do
     it 'increases quality by 1' do
       expect{ subject.update_quality }.to change{ item.quality }.by(1)
     end
+
+    it 'decreases sell-in date' do
+      expect{ subject.update_quality }.to change{ item.sell_in }.from(11).to(10)
+    end
   end
 
   context 'with Backstage Pass with 10 days or less left' do
