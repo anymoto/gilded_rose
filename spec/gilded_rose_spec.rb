@@ -2,9 +2,9 @@ require_relative '../lib/gilded_rose'
 
 describe GildedRose, "#update_quality" do
 
-  ######### Basic Item contexts
+  ######### Regular Item contexts
 
-  context 'with a single basic item' do
+  context 'with a single regular item' do
     let(:item) { Item.new('item', 5, 10) }
     let(:subject) { GildedRose.new([item]) }
 
