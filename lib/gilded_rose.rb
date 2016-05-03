@@ -5,25 +5,24 @@ class GildedRose
 
   def update_quality
     @items.each do |item|
-      case item.name
-      when 'Aged Brie'
-        item = AgedBrie.new(item)
-        item.update
-      when 'Backstage passes to a TAFKAL80ETC concert'
-        item = BackstagePass.new(item)
-        item.update
-      when 'Sulfuras, Hand of Ragnaros'
-        next
-      when 'Conjured'
-        item = Conjured.new(item)
-        item.update
-      else
-        item = RegularItem.new(item)
-        item.update
-      end
+      type = case item.name
+             when /Aged/i
+                AgedItem
+             when /Backstage/i
+                BackstageItem
+             when /Conjured/i
+               ConjuredItem
+             when /Sulfuras/i
+               SulfurasItem
+             else
+               RegularItem
+             end
+      type.new(item).update
     end
   end
 end
+
+private
 
 class BaseItem
   attr_accessor :item
@@ -46,19 +45,19 @@ class RegularItem < BaseItem
   end
 end
 
-class Conjured < BaseItem
+class ConjuredItem < BaseItem
   def update
     item.quality -= 2
-
     item.sell_in -= 1
     item.quality = 0 if item.quality < 0
   end
 end
 
-class Sulfuras < BaseItem
+class SulfurasItem < BaseItem
+  def update; end
 end
 
-class BackstagePass < BaseItem
+class BackstageItem < BaseItem
   def update
     item.quality += 1 if item.sell_in > 10
     item.quality += 2 if item.sell_in.between?(6, 10)
@@ -70,7 +69,7 @@ class BackstagePass < BaseItem
   end
 end
 
-class AgedBrie < BaseItem
+class AgedItem < BaseItem
   def update
     item.quality += 1 if item.quality < 50
     item.sell_in -= 1
