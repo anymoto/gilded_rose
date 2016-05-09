@@ -17,65 +17,59 @@ class GildedRose
              else
                RegularItem
              end
-      type.new(item).update
+      item.extend(type)
+      item.update
     end
   end
 end
+
+########## DO NOT CHANGE BELOW #########
+
+Item = Struct.new(:name, :sell_in, :quality)
 
 private
 
-class BaseItem
-  attr_accessor :item
-
-  def initialize(item)
-    @item = item
-  end
-end
-
-class RegularItem < BaseItem
+module RegularItem
   def update
-    if item.sell_in > 0
-      item.quality -= 1
+    if self.sell_in > 0
+      self.quality -= 1
     else
-      item.quality -= 2
+      self.quality -= 2
     end
 
-    item.sell_in -= 1
-    item.quality = 0 if item.quality < 0
+    self.sell_in -= 1
+    self.quality = 0 if self.quality < 0
   end
 end
 
-class ConjuredItem < BaseItem
+module ConjuredItem
   def update
-    item.quality -= 2
-    item.sell_in -= 1
-    item.quality = 0 if item.quality < 0
+    self.quality -= 2
+    self.sell_in -= 1
+    self.quality = 0 if self.quality < 0
   end
 end
 
-class SulfurasItem < BaseItem
+module SulfurasItem
   def update; end
 end
 
-class BackstageItem < BaseItem
+module BackstageItem
   def update
-    item.quality += 1 if item.sell_in > 10
-    item.quality += 2 if item.sell_in.between?(6, 10)
-    item.quality += 3 if item.sell_in.between?(1, 5)
-    item.quality = 0 if item.sell_in == 0
+    self.quality += 1 if self.sell_in > 10
+    self.quality += 2 if self.sell_in.between?(6, 10)
+    self.quality += 3 if self.sell_in.between?(1, 5)
+    self.quality = 0 if self.sell_in == 0
 
-    item.quality = 50 if item.quality > 50
-    item.sell_in -= 1
+    self.quality = 50 if self.quality > 50
+    self.sell_in -= 1
   end
 end
 
-class AgedItem < BaseItem
+module AgedItem
   def update
-    item.quality += 1 if item.quality < 50
-    item.sell_in -= 1
+    self.quality += 1 if self.quality < 50
+    self.sell_in -= 1
   end
 end
 
-######### DO NOT CHANGE BELOW #########
-
-Item = Struct.new(:name, :sell_in, :quality)
