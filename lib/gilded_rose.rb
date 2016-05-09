@@ -31,11 +31,7 @@ private
 
 module RegularItem
   def update
-    if self.sell_in > 0
-      self.quality -= 1
-    else
-      self.quality -= 2
-    end
+    self.quality -= self.sell_in > 0 ? 1 : 2
 
     self.sell_in -= 1
     self.quality = 0 if self.quality < 0
